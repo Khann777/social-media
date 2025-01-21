@@ -23,18 +23,23 @@ ADDITIONAL_APPS = [
     'rest_framework',
     'django_filters',
     'drf_yasg',
+    'knox',
 ]
 
 OWN_APPS = [
-    # 'apps.account',
-    # 'apps.comment',
-    # 'apps.chat',
-    # 'apps.follow',
-    # 'apps.like',
-    # 'apps.post'
+    'apps.account',
+    'apps.comment',
+    'apps.chat',
+    'apps.follow',
+    'apps.like',
+    'apps.post'
 ]
 
 INSTALLED_APPS = OWN_APPS + DJANGO_APPS + ADDITIONAL_APPS
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': ('knox.auth.TokenAuthentication',),
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -91,6 +96,10 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+AUTHENTICATION_BACKENDS = [
+    'authentication.backends.EmailAuthBackend',
+    'django.contrib.auth.backends.ModelBackend',
+]
 
 LANGUAGE_CODE = 'en-us'
 
@@ -123,5 +132,5 @@ EMAIL_HOST_PASSWORD = config('EMAIL_PASSWORD')
 REDIS_HOST = '127.0.0.1'
 REDIS_PORT = '6379'
 
-CELERY_BROKER_URL = 'redis://' + REDIS_HOST + ':' + REDIS_PORT
+CELERY_BLOCKER_URL = 'redis://' + REDIS_HOST + ':' + REDIS_PORT
 CELERY_RESULT_BACKEND = 'redis://' + REDIS_HOST + ':' + REDIS_PORT
