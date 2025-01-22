@@ -36,3 +36,15 @@ class UserResetPasswordToken(models.Model):
 
     def is_valid(self):
         return self.created_at >= timezone.now() - timedelta(minutes=10)
+
+
+class Profile(models.Model):
+    user = models.ForeignKey(
+        CustomUser,
+        on_delete=models.CASCADE,
+        related_name='profile'
+    )
+    avatar = models.ImageField(blank=True, null=True, default='default_avatar.png')
+    about = models.TextField(blank=True, default='Нет информации.')
+    date_of_birth = models.DateTimeField(blank=True, null=True)
+    city = models.CharField(max_length=50, blank=True, default='Не указан')
