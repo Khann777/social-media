@@ -1,4 +1,3 @@
-from rest_framework import serializers
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
 from django.contrib.auth import authenticate
@@ -30,9 +29,6 @@ class RegisterSerializer(serializers.ModelSerializer):
         user = User.objects.create_user(**validated_data)
         return user
 
-
-class LogOutSerializer(serializers.Serializer):
-    refresh_token = serializers.CharField(required=True, write_only=True)
 
 
 class ResetPasswordSerializer(serializers.Serializer):
@@ -84,4 +80,17 @@ class LoginSerializer(serializers.Serializer):
 
 
         attrs['user'] = user
+        return attrs
+
+class ResetPasswordConfirmSerializer(serializers.Serializer):
+    code = serializers.CharField(max_length=6, required=True)
+    new_password = serializers.CharField(min_length=8, write_only=True, required=True)
+    new_password_confirm = serializers.CharField(min_length=8, write_only=True, required=True)
+
+    def validate(self, attrs):
+        p1 = attrs.get('new_password')
+        p2 = attrs.pop('new_password_confirm')
+
+        if p1 != p2:
+            raise serializers.ValidationError('Passwords didn\'t match')
         return attrs
