@@ -1,18 +1,19 @@
+from rest_framework import permissions
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.generics import RetrieveAPIView
 
 from knox.models import AuthToken
-
-from django.contrib.auth import authenticate
 from django.shortcuts import get_object_or_404
 from django.contrib.auth import get_user_model
+
 
 from apps.account.tasks import send_activation_email_task, send_reset_password_email_task
 
 
-from .serializers import RegisterSerializer, LoginSerializer, ResetPasswordSerializer,ResetPasswordConfirmSerializer
-from .models import UserResetPasswordToken
+from .serializers import RegisterSerializer, LoginSerializer, ResetPasswordSerializer,ResetPasswordConfirmSerializer, ProfileSerializer
+from .models import UserResetPasswordToken, Profile
 from ..generals.generate_reset_token import generate_reset_password_token
 
 User = get_user_model()
@@ -112,3 +113,27 @@ class PasswordResetConfirmView(APIView):
         return Response({
             'msg':'Ваш пароль изменен!'
         }, status=200)
+
+
+class ProfileAll(APIView):
+    def post(self, request, *args, **kwargs):
+        profile_data = request.data
+        user = request.user
+        profile, created = Profile.objects.get_or_create(user=user)
+        serializer = ProfileSerializer(profile, data=profile_data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class ProfileDetailView(RetrieveAPIView):
+    queryset = Profile.objects.all()
+    serializer_class = ProfileSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+
+
+
+
+
+

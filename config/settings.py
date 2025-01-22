@@ -39,7 +39,9 @@ INSTALLED_APPS = OWN_APPS + DJANGO_APPS + ADDITIONAL_APPS
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': ('knox.auth.TokenAuthentication',),
+    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend']
 }
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

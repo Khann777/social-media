@@ -1,7 +1,8 @@
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
 from django.contrib.auth import authenticate
-from apps.account.models import CustomUser
+from apps.account.models import CustomUser, Profile
+
 
 
 User = get_user_model()
@@ -94,3 +95,9 @@ class ResetPasswordConfirmSerializer(serializers.Serializer):
         if p1 != p2:
             raise serializers.ValidationError('Passwords didn\'t match')
         return attrs
+
+class ProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Profile
+        fields = '__all__'
+        read_only_fields = ['user']
