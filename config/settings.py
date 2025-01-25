@@ -24,6 +24,7 @@ ADDITIONAL_APPS = [
     'django_filters',
     'drf_yasg',
     'knox',
+    'channels',
 ]
 
 OWN_APPS = [
@@ -72,6 +73,16 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'config.wsgi.application'
+ASGI_APPLICATION = 'config.asgi.application'
+
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            'hosts': [('127.0.0.1', 6379)],  # убедитесь, что это тот же адрес и порт, где работает Redis
+        }
+    }
+}
 
 DATABASES = {
     'default': {
