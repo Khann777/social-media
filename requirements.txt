@@ -6,6 +6,7 @@ celery
 redis
 drf_yasg
 django-filter
-django-channels
 django-rest-knox
 djangorestframework-simplejwt
+channels
+channels-redis
