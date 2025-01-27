@@ -1,15 +1,24 @@
 from rest_framework import serializers
 from .models import Post, Like
 from apps.comment.serializers import CommentSerializer
+from django.contrib.auth import get_user_model
+
+
+User = get_user_model()
+
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['id', 'username', 'email']
 
 class PostSerializer(serializers.ModelSerializer):
-    author = serializers.ReadOnlyField()
+    author = UserSerializer(read_only=True)
     comments = serializers.SerializerMethodField()
     likes_count = serializers.SerializerMethodField()
 
     class Meta:
         model = Post
-        fields = ['id', 'title', 'description', 'image', 'author', 'created_at', 'view_count', 'comments', 'likes_count']
+        fields = ['id', 'description', 'image', 'author', 'created_at', 'view_count', 'comments', 'likes_count']
 
     def get_comments(self, instance):
         comments = instance.comments.all()
