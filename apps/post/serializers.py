@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Post, Like
+from .models import Post
 from apps.comment.serializers import CommentSerializer
 from django.contrib.auth import get_user_model
 
@@ -18,7 +18,7 @@ class PostSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Post
-        fields = ['id', 'description', 'image', 'author', 'created_at', 'view_count', 'comments', 'likes_count']
+        fields = ['id', 'description', 'image', 'author', 'created_at', 'comments', 'likes_count']
 
     def get_comments(self, instance):
         comments = instance.comments.all()
