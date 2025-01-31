@@ -10,3 +10,5 @@ django-rest-knox
 djangorestframework-simplejwt
 channels
 channels-redis
+daphne
+gunicorn
