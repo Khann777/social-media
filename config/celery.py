@@ -10,5 +10,5 @@ os.environ.setdefault(
 
 app = Celery('config')
 app.config_from_object('django.conf:settings', namespace='CELERY')
-app.conf.broker_url = settings.CELERY_BLOCKER_URL
+app.conf.broker_url = settings.CELERY_BROKER_URL
 app.autodiscover_tasks()

@@ -7,4 +7,5 @@ urlpatterns = [
     path('api/account/', include('apps.account.urls')),
     path('api/post/', include('apps.post.urls')),
     path('api/comment/', include('apps.comment.urls')),
+    path('api/like/', include('apps.like.urls')),
 ]

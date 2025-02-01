@@ -1,0 +1,80 @@
+version: '3.8'
+
+services:
+  web:
+    build: .
+    container_name: social-media-web
+    restart: always
+    depends_on:
+      - db
+      - redis
+      - migrations
+    env_file:
+      - .env
+    volumes:
+      - static_volume:/usr/src/app/static
+      - logs_volume:/usr/src/app/logs
+    ports:
+      - "8000:8000"
+      - "8001:8001"
+
+
+  db:
+    image: postgres:15
+    container_name: social-media-db
+    restart: always
+    env_file:
+      - .env
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: social_media_db
+      POSTGRES_USER: davlyat
+      POSTGRES_PASSWORD: 1
+
+  redis:
+    image: redis:7
+    container_name: social-media-redis
+    restart: always
+    ports:
+      - "6379:6379"
+
+  celery:
+    build: .
+    container_name: social-media-celery
+    restart: always
+    depends_on:
+      - redis
+      - db
+    env_file:
+      - .env
+    command: celery -A config worker --loglevel=info
+
+  celery-beat:
+    build: .
+    container_name: social-media-celery-beat
+    restart: always
+    depends_on:
+      - redis
+      - db
+      - celery
+    env_file:
+      - .env
+    command: celery -A config beat --loglevel=info
+
+  migrations:
+    build: .
+    container_name: social-media-migrations
+    restart: "no"
+    depends_on:
+      - db
+    env_file:
+      - .env
+    command: [ "python", "manage.py", "migrate" ]
+
+volumes:
+  pg_data:
+  static_volume:
+  logs_volume:
