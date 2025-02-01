@@ -17,6 +17,8 @@ services:
     ports:
       - "8000:8000"
       - "8001:8001"
+    networks:
+      - my_network
 
 
   db:
@@ -33,6 +35,8 @@ services:
       POSTGRES_DB: social_media_db
       POSTGRES_USER: davlyat
       POSTGRES_PASSWORD: 1
+    networks:
+      - my_network
 
   redis:
     image: redis:7
@@ -40,6 +44,8 @@ services:
     restart: always
     ports:
       - "6379:6379"
+    networks:
+      - my_network
 
   celery:
     build: .
@@ -51,6 +57,8 @@ services:
     env_file:
       - .env
     command: celery -A config worker --loglevel=info
+    networks:
+      - my_network
 
   celery-beat:
     build: .
@@ -63,6 +71,8 @@ services:
     env_file:
       - .env
     command: celery -A config beat --loglevel=info
+    networks:
+      - my_network
 
   migrations:
     build: .
@@ -73,8 +83,27 @@ services:
     env_file:
       - .env
     command: [ "python", "manage.py", "migrate" ]
+    networks:
+      - my_network
+
+  nginx:
+    image: nginx:latest
+    container_name: social-media-nginx
+    restart: always
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/conf.d:/etc/nginx/conf.d
+      - static_volume:/usr/src/app/static
+    depends_on:
+      - web
+    networks:
+      - my_network
 
 volumes:
   pg_data:
   static_volume:
   logs_volume:
+
+networks:
+  my_network:
