@@ -1,8 +1,11 @@
 from rest_framework import permissions
+from rest_framework.generics import RetrieveAPIView
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework.authentication import TokenAuthentication
+from rest_framework.permissions import IsAuthenticated
 from rest_framework import status
-from rest_framework.generics import RetrieveAPIView
+from django.contrib.auth.signals import user_logged_out
 
 from knox.models import AuthToken
 from django.shortcuts import get_object_or_404
@@ -132,6 +135,19 @@ class ProfileDetailView(RetrieveAPIView):
     permission_classes = [permissions.IsAuthenticated]
 
 
+class LogoutView(APIView):
+    permission_classes = (IsAuthenticated,)
+
+    def post(self, request, format=None):
+        # Проверяем, что токен существует в запросе
+        auth_token = request.auth
+        if auth_token:
+            # Удаляем токен, если он существует
+            auth_token.delete()
+            return Response(None, status=status.HTTP_204_NO_CONTENT)
+        else:
+            # Если токен не найден, возвращаем ошибку
+            return Response({"detail": "Token not found."}, status=status.HTTP_400_BAD_REQUEST)
 
 
 
