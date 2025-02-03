@@ -33,7 +33,7 @@ services:
       - "5432:5432"
     environment:
       POSTGRES_DB: social_media_db
-      POSTGRES_USER: davlyat
+      POSTGRES_USER: ubuntu
       POSTGRES_PASSWORD: 1
     networks:
       - my_network
