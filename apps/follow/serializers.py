@@ -7,7 +7,6 @@ User = get_user_model()
 class FollowSerializer(serializers.ModelSerializer):
     follower = serializers.SlugRelatedField(
         slug_field="username",
-        queryset=User.objects.all(),
         read_only=True
     )
     following = serializers.SlugRelatedField(

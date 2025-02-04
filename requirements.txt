@@ -12,3 +12,4 @@ channels
 channels-redis
 daphne
 gunicorn
+django-jazzmin

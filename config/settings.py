@@ -11,6 +11,7 @@ DEBUG = config('DEBUG')
 ALLOWED_HOSTS = config('ALLOWED_HOSTS').split(',')
 
 DJANGO_APPS = [
+    'jazzmin',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -36,7 +37,7 @@ OWN_APPS = [
     'apps.post'
 ]
 
-INSTALLED_APPS = OWN_APPS + DJANGO_APPS + ADDITIONAL_APPS
+INSTALLED_APPS = DJANGO_APPS + ADDITIONAL_APPS + OWN_APPS
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': ('knox.auth.TokenAuthentication',),
@@ -144,3 +145,30 @@ REDIS_PORT = config('REDIS_PORT')
 # Настройки Celery
 CELERY_BROKER_URL = config('CELERY_BROKER_URL')
 CELERY_RESULT_BACKEND = config('CELERY_RESULT_BACKEND')
+
+JAZZMIN_SETTINGS = {
+    "site_title": "Social Media Admin Panel",
+    "site_header": "Social Media Admin Panel",
+    "site_brand": "Admin",
+    "welcome_sign": "Добро пожаловать в Social Media Admin Panel",
+    "search_model": "auth.User",
+    "user_avatar": None,
+
+    # Иконки моделей (нужно указать путь к шрифтам FontAwesome)
+    "icons": {
+        "auth.User": "fas fa-user",
+        "auth.Group": "fas fa-users",
+    },
+
+    # Пользовательские ссылки
+    "custom_links": {
+        "auth": [
+            {
+                "name": "Документация",
+                "url": "https://docs.djangoproject.com/en/stable/",
+                "icon": "fas fa-book",
+                "permissions": ["auth.view_user"]
+            }
+        ]
+    },
+}
